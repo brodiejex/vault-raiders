@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vault Raiders</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app"></div>
+  <div id="overlay" class="layer hidden"></div>
+  <div id="rules-layer" class="layer hidden"></div>
+
+  <!-- PeerJS connects devices for online play. Playing on one device works without it. -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script src="rules.js"></script>
+  <script src="bots.js"></script>
+  <script src="online.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
