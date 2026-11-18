@@ -61,5 +61,13 @@ their seat meanwhile.
 | `style.css` | Colors, card designs and layout. |
 | `tests/tests.html` | Open in a browser to run the rules checks (includes 400 computer-only games). |
 
-The cards use emoji designs for now. Card pictures can be added later the same way as in
-Dungeon's Treasure.
+## Card art
+
+The treasure side of each card uses a picture. The full-size originals (1086 × 1448) are kept
+in `Art/` on the computer they were made on and left out of GitHub. The game loads small copies
+from `Art/cards/` (one `.webp` per treasure, 480 × 640 pixels, about 100 KB each), listed in
+`CARD_ART` at the top of `game.js`. The three-treasure side doesn't have pictures yet.
+
+To replace a picture, make a new small copy with the same name, for example:
+
+    ffmpeg -i "Art/Potions.png" -vf "scale=480:640:flags=lanczos,format=rgb24" -c:v libwebp -quality 80 Art/cards/potions.webp

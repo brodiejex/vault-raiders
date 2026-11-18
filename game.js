@@ -21,6 +21,21 @@
   const rulesLayer = document.getElementById('rules-layer');
   const BOT_DELAY = 1500; // long enough to see whose turn it is
   const seatNumber = (i) => String(i + 1);
+  // Pictures for the treasure side of the cards, made small from the
+  // full-size art in Art/. A treasure left out of this list falls back to its
+  // emoji design. The three-treasure side has no pictures yet.
+  const CARD_ART = {
+    gold: 'Art/cards/gold.webp',
+    gems: 'Art/cards/gems.webp',
+    potions: 'Art/cards/potions.webp',
+    weapons: 'Art/cards/weapons.webp',
+    scrolls: 'Art/cards/scrolls.webp',
+    eggs: 'Art/cards/eggs.webp',
+    relics: 'Art/cards/relics.webp',
+  };
+  // Load them all up front so a flipped card never appears blank.
+  Object.values(CARD_ART).forEach((src) => { new Image().src = src; });
+
   const BOT_NAMES = ['Grimbold', 'Elowen', 'Thrak', 'Seraphine', 'Pip', 'Morwen', 'Bramble'];
 
   let mode = 'local';
@@ -95,6 +110,13 @@
   // The treasure side.
   function cardHtml(card, { extraClass = '', tag = '' } = {}) {
     const t = T(card.type);
+    if (CARD_ART[card.type]) {
+      return `<div class="card front has-art t-${card.type} ${extraClass}" title="${esc(t.name)}">
+        <img class="art-img" src="${CARD_ART[card.type]}" alt="${esc(t.name)}">
+        <div class="art-name">${t.icon} ${esc(t.name)}</div>
+        ${tag ? `<div class="card-tag">${tag}</div>` : ''}
+      </div>`;
+    }
     return `<div class="card front t-${card.type} ${extraClass}" title="${esc(t.name)}">
       <div class="icon">${t.icon}</div>
       <div class="title">${esc(t.name)}</div>
@@ -760,7 +782,7 @@
         ${ui.message ? `<div class="message">${esc(ui.message)}</div>` : ''}
         ${controls.html}
         ${log.length > 1 ? `
-          <details class="log">
+          <details class="log" ${storageGet('vault.logOpen') ? 'open' : ''}>
             <summary>📖 What happened (${log.length})</summary>
             <ol reversed>${log.map((ev) => `<li>${esc(ev.text)}</li>`).join('')}</ol>
           </details>` : ''}
@@ -769,6 +791,8 @@
 
     app.querySelector('[data-rules]').addEventListener('click', showRules);
     app.querySelector('.guide').addEventListener('toggle', (e) => storageSet('vault.guideClosed', e.target.open ? '' : '1'));
+    const logBox = app.querySelector('.log');
+    if (logBox) logBox.addEventListener('toggle', (e) => storageSet('vault.logOpen', e.target.open ? '1' : ''));
     const toggle = document.getElementById('teach-toggle');
     if (toggle) toggle.addEventListener('click', () => {
       game.teaching = !game.teaching;
